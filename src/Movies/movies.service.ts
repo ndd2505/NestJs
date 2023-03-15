@@ -19,7 +19,7 @@ export class MoviesService {
     return this.moviesRepository.find();
   }
 
-  findById(id: number): Promise<Movies> {
+  findById(id: number): Promise<Movies | null> {
     return this.moviesRepository.findOneBy({ id });
   }
 
@@ -31,7 +31,7 @@ export class MoviesService {
     return this.moviesRepository.delete(id);
   }
 
-  update(id: number, body): Promise<Movies> {
+  update(id: number, body): Promise<Movies | null> {
     this.moviesRepository.update(id, body);
     return this.findById(id);
   }

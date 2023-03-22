@@ -1,16 +1,40 @@
-import { Body, Controller, Get, Post, Put, Query, Req } from '@nestjs/common';
-import { Request } from 'express';
-import { MoviesService } from './movies.service';
-import { CreateMovieDto } from './movies.dto';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  HttpStatus,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { Delete } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import { Request } from 'express';
+
+import { CreateMovieDto } from './movies.dto';
+import { MoviesService } from './movies.service';
 
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
+  @Get('/crawl')
+  crawl() {
+    return this.moviesService.crawl();
+  }
+
   @Get()
-  test(@Req() req: Request, @Query() que): any {
-    const id = que?.id;
+  test(
+    @Req() req: Request,
+    @Query(
+      'id',
+      new DefaultValuePipe(0),
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id?: number,
+  ): any {
     if (!id) {
       return this.moviesService.findAll();
     } else {
@@ -24,8 +48,14 @@ export class MoviesController {
   }
 
   @Delete()
-  delete(@Query() query) {
-    return this.moviesService.delete(query);
+  delete(
+    @Query(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.moviesService.delete(id);
   }
 
   @Put()

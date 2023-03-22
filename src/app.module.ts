@@ -1,31 +1,34 @@
 // nestjs Modules
 import {
+  MiddlewareConsumer,
   Module,
   NestModule,
-  MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-// Modules
-import { MoviesModule } from './Movies/movies.module';
-
-// Service
-import { AppService } from './app.service';
-
+// ModulesCrawlerService
+import { CrawlerModule } from './crawler/crawler.module';
+// Entity
+import { Movies } from './movies/movies.entity';
+import { MoviesModule } from './movies/movies.module';
 // Controller
 import { AppController } from './app.controller';
-
-// Entity
-import { Movies } from './Movies/movies.entity';
-
+// Guard
+import { AuthGuard } from './app.guard';
 //Middleware
 import { AppMiddleware } from './app.middleware';
+// Service
+import { AppService } from './app.service';
+// Exception
+import HttpExceptionFilter from './app-exception.filter';
 
 @Module({
   imports: [
     MoviesModule,
+    CrawlerModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -35,10 +38,22 @@ import { AppMiddleware } from './app.middleware';
       database: 'New',
       entities: [Movies],
       synchronize: true,
+      logging: true,
+      // dropSchema: false,
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}

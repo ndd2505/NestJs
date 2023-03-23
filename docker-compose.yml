@@ -9,6 +9,8 @@ services:
       - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: secret 
+      MYSQL_DATABASE: New
+      TZ: Asia/Bangkok
     networks:
       - default  
 

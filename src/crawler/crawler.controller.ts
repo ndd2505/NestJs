@@ -11,4 +11,9 @@ export class CrawlerController {
   crawl() {
     return this.CrawlerService.crawl();
   }
+
+  @Get('/agoda')
+  crawlAgo() {
+    return this.CrawlerService.crawlAgo();
+  }
 }

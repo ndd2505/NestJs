@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   HttpStatus,
   ParseIntPipe,
@@ -10,7 +11,6 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { Delete } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { Request } from 'express';
 
 import { CreateMovieDto } from './movies.dto';

@@ -67,7 +67,9 @@ export class MoviesService {
 
   async findById(id: number): Promise<Movies | null> {
     const value = await this.moviesRepository.findOneBy({ id });
+    console.log(value, id);
     if (!value) {
+      console.log('do');
       throw new NotFoundException();
     }
     return value;

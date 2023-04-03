@@ -1,4 +1,5 @@
 // nestjs Modules
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {
   MiddlewareConsumer,
   Module,
@@ -6,6 +7,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
@@ -37,9 +39,16 @@ import HttpExceptionFilter from './app-exception.filter';
       password: 'secret',
       database: 'New',
       entities: [Movies],
-      synchronize: true,
+      synchronize: false,
       logging: true,
-      // dropSchema: false,
+      dropSchema: false,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      include: [MoviesModule],
+      // autoSchemaFile: 'schema.gql',
+      autoSchemaFile: true,
+      sortSchema: true,
     }),
   ],
   controllers: [AppController],

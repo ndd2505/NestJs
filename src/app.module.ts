@@ -13,9 +13,16 @@ import { DataSource } from 'typeorm';
 
 // ModulesCrawlerService
 import { CrawlerModule } from './crawler/crawler.module';
-// Entity
+// Customers
+import { Customers } from './customers/customers.entity';
+import { CustomersModule } from './customers/customers.module';
+// Movies
 import { Movies } from './movies/movies.entity';
 import { MoviesModule } from './movies/movies.module';
+import { OrderDetails } from './orders/order-details.entity';
+//Orders
+import { Orders } from './orders/orders.entity';
+import { OrdersModule } from './orders/orders.module';
 // Controller
 import { AppController } from './app.controller';
 // Guard
@@ -31,6 +38,8 @@ import HttpExceptionFilter from './app-exception.filter';
   imports: [
     MoviesModule,
     CrawlerModule,
+    CustomersModule,
+    OrdersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -38,7 +47,7 @@ import HttpExceptionFilter from './app-exception.filter';
       username: 'root',
       password: 'secret',
       database: 'New',
-      entities: [Movies],
+      entities: [Movies, Customers, Orders, OrderDetails],
       synchronize: false,
       logging: true,
       dropSchema: false,
